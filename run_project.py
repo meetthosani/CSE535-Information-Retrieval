@@ -198,4 +198,4 @@ if __name__ == "__main__":
         this pre-loaded in memory index. """
     runner.run_indexer(corpus)
 
-    # app.run(host="0.0.0.0", port=9999)
+    app.run(host="0.0.0.0", port=9999)
