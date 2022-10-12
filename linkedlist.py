@@ -8,13 +8,14 @@ import math
 
 class Node:
 
-    def __init__(self, value=None, next=None):
+    def __init__(self, value=None, next=None, skip_p = None):
         """ Class to define the structure of each node in a linked list (postings list).
             Value: document id, Next: Pointer to the next node
             Add more parameters if needed.
             Hint: You may want to define skip pointers & appropriate score calculation here"""
         self.value = value
         self.next = next
+        self.skip_p = skip_p
 
 
 class LinkedList:
@@ -42,7 +43,7 @@ class LinkedList:
         else:
             """ Write logic to traverse the linked list.
                 To be implemented."""
-            curr = self.start_node.next
+            curr = self.start_node
             while curr:
                 traversal.append(curr.value)
                 curr = curr.next
@@ -56,7 +57,11 @@ class LinkedList:
         else:
             """ Write logic to traverse the linked list using skip pointers.
                 To be implemented."""
-            raise NotImplementedError
+            curr = self.start_node
+            while curr:
+                traversal.append(curr.value)
+                curr = curr.skip_p
+            #raise NotImplementedError
             return traversal
 
     def add_skip_connections(self):
@@ -66,7 +71,39 @@ class LinkedList:
         """ Write logic to add skip pointers to the linked list. 
             This function does not return anything.
             To be implemented."""
-        raise NotImplementedError
+        self.skip_length = int(round(math.sqrt(self.length), 0))
+        curr, prev = self.start_node, self.start_node
+        if n_skips*n_skips == self.skip_length:
+            i=1
+            while i<n_skips and curr:
+                for sp in range(self.skip_length+1):
+                    if curr:
+                        curr = curr.next
+                    else:
+                        break
+                if curr:
+                    prev.skip_p = curr
+                    prev = prev.next
+                    i+=1
+                    #print(i, skip_p.data)
+                else:
+                    prev.skip_p = None
+                    break
+        else:
+            while curr:
+                for sp in range(self.skip_length+1):
+                    if curr:
+                        curr = curr.next
+                    else:
+                        break
+                if curr:
+                    prev.skip_p = curr
+                    prev = prev.next
+                    
+                else:
+                    prev.skip_p = None
+                    break
+        #raise NotImplementedError
 
     def insert_at_end(self, value):
         """ Write logic to add new elements to the linked list.

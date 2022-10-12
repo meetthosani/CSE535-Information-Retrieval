@@ -43,19 +43,6 @@ class Indexer:
          #   self.inverted_index[key] = sorted(value)
         
 
-    """def create_linked_list(self):
-        ps = []
-
-        for key, value in (self.inverted_index.items()):
-            linked_list = LinkedList()
-            linked_list.insert(key)
-        
-            for num in range(len(value)):
-                linked_list.insert(value[num])
-        
-        ps.append(linked_list)
-"""
-
     def sort_terms(self):
         """ Sorting the index by terms.
             Already implemented."""
@@ -67,7 +54,13 @@ class Indexer:
     def add_skip_connections(self):
         """ For each postings list in the index, add skip pointers.
             To be implemented."""
-        raise NotImplementedError
+        
+        for key, value in self.inverted_index.items():
+            if value.length > 2:
+                value.add_skip_connections()
+
+        
+        #raise NotImplementedError
 
     def calculate_tf_idf(self):
         """ Calculate tf-idf score for each document in the postings lists of the index.
