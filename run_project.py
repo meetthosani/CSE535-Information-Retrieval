@@ -74,7 +74,50 @@ class ProjectRunner:
         return merged_list, count
 
         # raise NotImplementedError
+    
+    def _merge_skip(self, l1, l2):
+        res = LinkedList()
+        list1, list2 = l1.start_node, l2.start_node
+        count = 0
+        while list1 and list2:
+            if list1.value == list2.value:
+                res.insert_at_end(list2.value, list2.tf)
+                list1, list2 = list1.next, list2.next
+                count+=1
+            elif list1.value>list2.value:
+                if list2.skip_p and list2.skip_p.value <= list1.value:
+                    while list2.skip_p and list2.skip_p.value<= list1.value:
+                        list2 = list2.skip_p
+                        count+=1
+                else:
+                    list2 = list2.next
+                    count+=1
+            else:
+                if list1.skip_p and list1.skip_p.value <= list2.value:
+                    while list1.skip_p and list1.skip_p.value <= list2.value:
+                        list1 = list1.skip_p
+                        count+=1
+                else:
+                    list1 = list1.next
+                    count+=1
+        return res, count
 
+
+    def _daat_skip(self, input_array):
+        if not input_array:
+            return [], 0
+        count = 0
+        res = self.indexer.get_index()[input_array[0]]
+
+        for query in input_array[1:]:
+            res, count = self._merge_skip(res, self.indexer.get_index()[query])
+            count += 1
+        
+        merged_skip_list = res.traverse_list()
+        return merged_skip_list, count
+
+    
+    
     def _get_postings(self, term):
         """ Function to get the postings list of a term from the index.
             Use appropriate parameters & return types.
@@ -160,7 +203,7 @@ class ProjectRunner:
                 and_comparisons_no_skip_sorted, and_comparisons_skip_sorted = None, None, None, None
 
             and_op_no_skip, and_comparisons_no_skip = self._daat_and(input_term_arr)
-            # and_op_skip, and_comparisons_skip = self._daat_and_skip(input_term_arr, output_dict['postingsListSkip'])
+            and_op_skip, and_comparisons_skip = self._daat_skip(input_term_arr)
             # and_op_no_skip_sorted, and_comparisons_no_skip_sorted = self._daat_no_skip_tdidf_sorted(input_term_arr, output_dict['postingsList'])
             # and_op_skip_sorted, and_comparisons_skip_sorted = self._daat_skip_tfidf_sorted(input_term_arr, output_dict['postingsListSkip'])
             
