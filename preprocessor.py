@@ -41,7 +41,7 @@ class Preprocessor:
                 list_of_words_without_sw.append(word)
         for words in list_of_words_without_sw:
             result.append(self.ps.stem(words))
-        return list(set(result))
+        return result
 
         """string = text
         string = re.sub(r"[^a-zA-Z0-9 ]", "", string.strip().lower())
