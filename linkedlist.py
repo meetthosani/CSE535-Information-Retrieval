@@ -47,7 +47,7 @@ class LinkedList:
             """ Write logic to traverse the linked list.
                 To be implemented."""
             curr = self.start_node
-            while curr:
+            while curr is not None:
                 traversal.append(curr.value)
                 curr = curr.next
             #raise NotImplementedError
@@ -60,7 +60,7 @@ class LinkedList:
         else:
             curr = self.start_node
             # Start traversal from head, and go on till you reach None
-            while curr:
+            while curr is not None:
                 traversal_tf.append(curr.tf)
                 curr = curr.next
             return traversal_tf
@@ -79,7 +79,7 @@ class LinkedList:
             """ Write logic to traverse the linked list using skip pointers.
                 To be implemented."""
             curr = self.start_node
-            while curr:
+            while curr is not None:
                 traversal.append(curr.value)
                 curr = curr.skip_p
             #raise NotImplementedError
@@ -92,15 +92,20 @@ class LinkedList:
         """ Write logic to add skip pointers to the linked list. 
             This function does not return anything.
             To be implemented."""
-        self.skip_length = int(round(math.sqrt(self.length), 0))
+        if n_skips==0:
+            return
+        self.skip_length = round(math.sqrt(self.length), 0)
         
-        if (self.start_node is None) or (not self.skip_length>=1):
+        if (self.start_node is None):
+            return 
+        
+        if (not self.skip_length>=1):
             return
         
         curr, prev = self.start_node, self.start_node
         while curr:
             i, prev = 0, curr
-            while i<self.skip_length and prev:
+            while i<self.skip_length and prev is not None:
                 prev = prev.next
                 i+=1
             curr.skip_p = prev

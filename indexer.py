@@ -59,8 +59,7 @@ class Indexer:
             To be implemented."""
         
         for key, value in self.inverted_index.items():
-            if value.length > 2:
-                value.add_skip_connections()
+            value.add_skip_connections()
 
         
         #raise NotImplementedError
