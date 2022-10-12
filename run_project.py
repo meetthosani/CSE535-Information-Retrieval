@@ -3,6 +3,7 @@
 Institute: University at Buffalo
 '''
 
+from subprocess import list2cmdline
 from tqdm import tqdm
 from preprocessor import Preprocessor
 from indexer import Indexer
@@ -27,18 +28,52 @@ class ProjectRunner:
         self.preprocessor = Preprocessor()
         self.indexer = Indexer()
 
-    def _merge(self):
+    def _merge(self, l1, l2):
         """ Implement the merge algorithm to merge 2 postings list at a time.
             Use appropriate parameters & return types.
             While merging 2 postings list, preserve the maximum tf-idf value of a document.
             To be implemented."""
-        raise NotImplementedError
+        res = LinkedList()
+        list1 = l1.start_node
+        list2 = l2.start_node
+        count = 0
+        while list1 and list2:
+            if list1.value == list2.value:
+                res.insert_at_end(list1.value, list1.tf)
+                list1 = list1.next
+                list2 = list2.next
+                count += 1
+            elif list1.value > list2.value:
+                list2 = list2.next
+                count+=1
+            else:
+                list1 = list1.next
+                count+=1
+        return res, count
 
-    def _daat_and(self):
+        
+        # raise NotImplementedError
+
+    def _daat_and(self, input_array):
         """ Implement the DAAT AND algorithm, which merges the postings list of N query terms.
             Use appropriate parameters & return types.
             To be implemented."""
-        raise NotImplementedError
+        #DAAT and
+        if not input_array:
+            return [], 0
+        count = 0
+
+        # Taking first i/p in res and merging it from 2nd till nth
+        res = self.indexer.get_index()[input_array[0]]
+
+        for query in input_array[1:]:
+            res, count = self._merge(res, self.indexer.get_index()[query])
+            count += 1
+        
+        merged_list = res.traverse_list()
+        return merged_list, count
+
+        # raise NotImplementedError
 
     def _get_postings(self, term):
         """ Function to get the postings list of a term from the index.
@@ -124,6 +159,10 @@ class ProjectRunner:
             and_comparisons_no_skip, and_comparisons_skip, \
                 and_comparisons_no_skip_sorted, and_comparisons_skip_sorted = None, None, None, None
 
+            and_op_no_skip, and_comparisons_no_skip = self._daat_and(input_term_arr)
+            # and_op_skip, and_comparisons_skip = self._daat_and_skip(input_term_arr, output_dict['postingsListSkip'])
+            # and_op_no_skip_sorted, and_comparisons_no_skip_sorted = self._daat_no_skip_tdidf_sorted(input_term_arr, output_dict['postingsList'])
+            # and_op_skip_sorted, and_comparisons_skip_sorted = self._daat_skip_tfidf_sorted(input_term_arr, output_dict['postingsListSkip'])
             
             """ Implement logic to populate initialize the above variables.
                 The below code formats your result to the required format.

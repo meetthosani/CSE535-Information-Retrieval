@@ -173,7 +173,7 @@ class LinkedList:
         while curr_len:
             count+=1
             curr_len = curr_len.next
-        print("len of posting list ",count)
+        # print("len of posting list ",count)
         while curr:
             tf = curr.tf * count
             # print("TF --> ",tf)
