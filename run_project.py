@@ -82,7 +82,7 @@ class ProjectRunner:
         count = 0
         while list1 and list2:
             if list1.value == list2.value:
-                res.insert_at_end(list2.value, list2.tf)
+                res.insert_at_end(list2.value, max(list1.tf_idf, list2.tf_idf))
                 list1, list2 = list1.next, list2.next
                 count+=1
             elif list1.value>list2.value:
