@@ -25,6 +25,7 @@ class Indexer:
             Already implemented."""
         tf = Counter(tokenized_document)
         self.num_of_tokens[doc_id] = len(tokenized_document)
+        tokenized_document = list(set(tokenized_document))
         for t in tokenized_document:
             self.add_to_index(t, doc_id, tf[t])
 
