@@ -45,7 +45,7 @@ class ProjectRunner:
             Use appropriate parameters & return types.
             To be implemented."""
         postings = self.indexer.get_index()[term].traverse_list()
-        skip_postings = self.indexer.get_index[term].traverse_skips()
+        skip_postings = self.indexer.get_index()[term].traverse_skips()
         return postings, skip_postings
         #raise NotImplementedError
 
