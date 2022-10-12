@@ -146,6 +146,7 @@ class ProjectRunner:
             count += 1
         
         merged_skip_list = res.traverse_for_tfidf()
+        merged_skip_list = sorted(merged_skip_list, key = lambda x : x.tf_idf, reverse=True)
         
         return [link_list.value for link_list in merged_skip_list], count
     
