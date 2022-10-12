@@ -4,11 +4,12 @@ Institute: University at Buffalo
 '''
 
 import math
+from symbol import tfpdef
 
 
 class Node:
 
-    def __init__(self, value=None, next=None, skip_p = None):
+    def __init__(self, value=None, next=None, skip_p = None, tf = None, tf_idf = None):
         """ Class to define the structure of each node in a linked list (postings list).
             Value: document id, Next: Pointer to the next node
             Add more parameters if needed.
@@ -16,6 +17,8 @@ class Node:
         self.value = value
         self.next = next
         self.skip_p = skip_p
+        self.tf = tf
+        self.tf_idf = tf_idf
 
 
 class LinkedList:
@@ -49,7 +52,25 @@ class LinkedList:
                 curr = curr.next
             #raise NotImplementedError
             return traversal
-
+    
+    def traverse_terms(self):
+        traversal_tf = []
+        if self.start_node is None:
+            return
+        else:
+            curr = self.start_node
+            # Start traversal from head, and go on till you reach None
+            while curr:
+                traversal_tf.append(curr.tf)
+                curr = curr.next
+            return traversal_tf
+    
+    def add_idf_scores(self,tf_idf_scores):
+        curr = self.start_node
+        for score in tf_idf_scores:
+            curr.tf_idf = score
+            curr = curr.next
+    
     def traverse_skips(self):
         traversal = []
         if self.start_node is None:
@@ -72,8 +93,20 @@ class LinkedList:
             This function does not return anything.
             To be implemented."""
         self.skip_length = int(round(math.sqrt(self.length), 0))
+        
+        if (self.start_node is None) or (not self.skip_length>=1):
+            return
+        
         curr, prev = self.start_node, self.start_node
-        if n_skips*n_skips == self.skip_length:
+        while curr:
+            i, prev = 0, curr
+            while i<self.skip_length and prev:
+                prev = prev.next
+                i+=1
+            curr.skip_p = prev
+            curr = curr.skip_p
+
+        """if n_skips*n_skips == self.skip_length:
             i=1
             while i<n_skips and curr:
                 for sp in range(self.skip_length+1):
@@ -83,7 +116,7 @@ class LinkedList:
                         break
                 if curr:
                     prev.skip_p = curr
-                    prev = prev.next
+                    prev = prev.skip_p
                     i+=1
                     #print(i, skip_p.data)
                 else:
@@ -98,14 +131,14 @@ class LinkedList:
                         break
                 if curr:
                     prev.skip_p = curr
-                    prev = prev.next
+                    prev = prev.skip_p
                     
                 else:
                     prev.skip_p = None
-                    break
+                    break """
         #raise NotImplementedError
 
-    def insert_at_end(self, value):
+    def insert_at_end(self, value, tf):
         """ Write logic to add new elements to the linked list.
             Insert the element at an appropriate position, such that elements to the left are lower than the inserted
             element, and elements to the right are greater than the inserted element.
@@ -117,7 +150,28 @@ class LinkedList:
             while(current.next):
                 current = current.next
             current.next = newNode
+            self.end_node = newNode
+            self.end_node.tf = tf
         else:
             self.start_node = newNode
+            self.end_node = newNode
+            self.end_node.tf = tf
+
+
+    def calculate_tf_idf(self, total_docs):
+        curr, curr_len = self.start_node, self.start_node
+        if curr is None:
+            return
+        self.idf = total_docs/self.length
+        count = 0
+        while curr_len:
+            count+=1
+            curr_len = curr_len.next
+        while curr:
+            tf = curr.tf * count
+            curr.tf_idf = tf * self.idf
+            curr = curr.next
+        
+
         
 

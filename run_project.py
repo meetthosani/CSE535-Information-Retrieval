@@ -40,11 +40,14 @@ class ProjectRunner:
             To be implemented."""
         raise NotImplementedError
 
-    def _get_postings(self):
+    def _get_postings(self, term):
         """ Function to get the postings list of a term from the index.
             Use appropriate parameters & return types.
             To be implemented."""
-        raise NotImplementedError
+        postings = self.indexer.get_index()[term].traverse_list()
+        skip_postings = self.indexer.get_index[term].traverse_skips()
+        return postings, skip_postings
+        #raise NotImplementedError
 
     def _output_formatter(self, op):
         """ This formats the result in the required format.
@@ -61,14 +64,16 @@ class ProjectRunner:
             Already implemented, but you can modify the orchestration, as you seem fit."""
         with open(corpus, 'r') as fp:
             lines = sorted(fp.readlines(),key = lambda line:int(line.split()[0]))
+            total_docs = 0
             for line in tqdm(lines):
+                total_docs += 1
                 doc_id, document = self.preprocessor.get_doc_id(line)
                 tokenized_document = self.preprocessor.tokenizer(document)
                 self.indexer.generate_inverted_index(doc_id, tokenized_document)
         #self.indexer.create_linked_list()
         self.indexer.sort_terms()
         self.indexer.add_skip_connections()
-        self.indexer.calculate_tf_idf()
+        self.indexer.calculate_tf_idf(total_docs)
 
     def sanity_checker(self, command):
         """ DO NOT MODIFY THIS. THIS IS USED BY THE GRADER. """
@@ -101,12 +106,12 @@ class ProjectRunner:
                 3. Get the DAAT AND query results & number of comparisons with & without skip pointers.
                 4. Get the DAAT AND query results & number of comparisons with & without skip pointers, 
                     along with sorting by tf-idf scores."""
-            raise NotImplementedError
+            #raise NotImplementedError
 
-            input_term_arr = []  # Tokenized query. To be implemented.
-
+            input_term_arr = self.preprocessor.tokenizer(query)  # Tokenized query. To be implemented.
             for term in input_term_arr:
-                postings, skip_postings = None, None
+                postings, skip_postings = self._get_postings(term)
+
 
                 """ Implement logic to populate initialize the above variables.
                     The below code formats your result to the required format.
@@ -198,4 +203,4 @@ if __name__ == "__main__":
         this pre-loaded in memory index. """
     runner.run_indexer(corpus)
 
-    app.run(host="0.0.0.0", port=9999)
+    # app.run(host="0.0.0.0", port=9999)
