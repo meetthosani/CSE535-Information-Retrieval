@@ -163,12 +163,15 @@ class LinkedList:
         if curr is None:
             return
         self.idf = total_docs/self.length
+        # print("idf scores are ---> ", self.idf)
         count = 0
         while curr_len:
             count+=1
             curr_len = curr_len.next
+        print("len of posting list ",count)
         while curr:
             tf = curr.tf * count
+            # print("TF --> ",tf)
             curr.tf_idf = tf * self.idf
             curr = curr.next
         
