@@ -156,25 +156,25 @@ class LinkedList:
             current.next = newNode
             self.end_node = newNode
             self.end_node.tf = tf
+            self.end_node.tf_idf = tf
         else:
             self.start_node = newNode
             self.end_node = newNode
             self.end_node.tf = tf
+            self.end_node.tf_idf = tf
 
 
-    def cal_tf_idf(self, total_docs):
+
+    def cal_tf_idf(self, total_docs, num_of_tokens):
         curr, curr_len = self.start_node, self.start_node
         if curr is None:
             return
         self.idf = total_docs/self.length
         # print("idf scores are ---> ", self.idf)
-        count = 0
-        while curr_len:
-            count+=1
-            curr_len = curr_len.next
+
         # print("len of posting list ",count)
         while curr:
-            tf = curr.tf / count
+            tf = curr.tf / num_of_tokens[curr.value]
             #print("TF --> ",tf, "self.idf--->", self.idf)
             curr.tf_idf = tf * self.idf
             # print("tf-idf --->",curr.tf_idf)

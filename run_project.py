@@ -40,7 +40,7 @@ class ProjectRunner:
         while list1 and list2:
             if list1.value == list2.value:
 
-                res.insert_at_end(list1.value, list1.tf)
+                res.insert_at_end(list1.value, max(list1.tf_idf, list2.tf_idf))
                 list1 = list1.next
                 list2 = list2.next
                 count += 1
@@ -130,13 +130,10 @@ class ProjectRunner:
             count += 1
         
         merged_list = res.traverse_for_tfidf()
-        
+        i = 0
         merged_list = sorted(merged_list, key = lambda x : x.tf_idf, reverse=True)
-        
-        merged = []
-        for i in merged_list:
-            merged.append(i.value)
-        return merged, count
+        o=0
+        return [link_list.value for link_list in merged_list], count
     
     def _daat_tfidf_skip(self, input_array):
         if not input_array:
@@ -149,10 +146,8 @@ class ProjectRunner:
             count += 1
         
         merged_skip_list = res.traverse_for_tfidf()
-        merged = []
-        for i in merged_skip_list:
-            merged.append(i.value)
-        return merged, count
+        
+        return [link_list.value for link_list in merged_skip_list], count
     
     def _get_postings(self, term):
         """ Function to get the postings list of a term from the index.

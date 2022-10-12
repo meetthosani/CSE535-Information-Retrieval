@@ -13,6 +13,7 @@ class Indexer:
     def __init__(self):
         """ Add more attributes if needed"""
         self.inverted_index = OrderedDict({})
+        self.num_of_tokens = OrderedDict({})
 
     def get_index(self):
         """ Function to get the index.
@@ -23,6 +24,7 @@ class Indexer:
         """ This function adds each tokenized document to the index. This in turn uses the function add_to_index
             Already implemented."""
         tf = Counter(tokenized_document)
+        self.num_of_tokens[doc_id] = len(tokenized_document)
         for t in tokenized_document:
             self.add_to_index(t, doc_id, tf[t])
 
@@ -68,6 +70,6 @@ class Indexer:
         """ Calculate tf-idf score for each document in the postings lists of the index.
             To be implemented."""
         for key, value in self.inverted_index.items():
-            value.cal_tf_idf(total_docs)
+            value.cal_tf_idf(total_docs, self.num_of_tokens)
             
         #raise NotImplementedError
