@@ -39,6 +39,7 @@ class ProjectRunner:
         count = 0
         while list1 and list2:
             if list1.value == list2.value:
+
                 res.insert_at_end(list1.value, list1.tf)
                 list1 = list1.next
                 list2 = list2.next
@@ -117,6 +118,26 @@ class ProjectRunner:
         return merged_skip_list, count
 
     
+    def _daat_tfidf(self, input_array):
+        if not input_array:
+            return [], 0
+        count = 0
+        
+        res = self.indexer.get_index()[input_array[0]]
+
+        for query in input_array[1:]:
+            res, count = self._merge(res, self.indexer.get_index()[query])
+            count += 1
+        
+        merged_list = res.traverse_for_tfidf()
+        
+        merged_list = sorted(merged_list, key = lambda x : x.tf_idf, reverse=True)
+        
+        merged = []
+        for i in merged_list:
+            merged.append(i.value)
+        return merged, count
+
     
     def _get_postings(self, term):
         """ Function to get the postings list of a term from the index.
@@ -204,8 +225,8 @@ class ProjectRunner:
 
             and_op_no_skip, and_comparisons_no_skip = self._daat_and(input_term_arr)
             and_op_skip, and_comparisons_skip = self._daat_skip(input_term_arr)
-            # and_op_no_skip_sorted, and_comparisons_no_skip_sorted = self._daat_no_skip_tdidf_sorted(input_term_arr, output_dict['postingsList'])
-            # and_op_skip_sorted, and_comparisons_skip_sorted = self._daat_skip_tfidf_sorted(input_term_arr, output_dict['postingsListSkip'])
+            and_op_no_skip_sorted, and_comparisons_no_skip_sorted = self._daat_tfidf(input_term_arr)
+            #and_op_skip_sorted, and_comparisons_skip_sorted = self._daat_skip_tfidf_sorted(input_term_arr, output_dict['postingsListSkip'])
             
             """ Implement logic to populate initialize the above variables.
                 The below code formats your result to the required format.

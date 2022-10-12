@@ -17,7 +17,7 @@ class Node:
         self.next = next
         self.skip_p = skip_p
         self.tf = tf
-        self.tf_idf = tf_idf
+        self.tf_idf = 0
 
 
 class LinkedList:
@@ -52,17 +52,17 @@ class LinkedList:
             #raise NotImplementedError
             return traversal
     
-    def traverse_terms(self):
-        traversal_tf = []
+    def traverse_for_tfidf(self):
+        traversal = []
         if self.start_node is None:
             return
         else:
             curr = self.start_node
             # Start traversal from head, and go on till you reach None
             while curr is not None:
-                traversal_tf.append(curr.tf)
+                traversal.append(curr)
                 curr = curr.next
-            return traversal_tf
+            return traversal
     
     def add_idf_scores(self,tf_idf_scores):
         curr = self.start_node
@@ -162,7 +162,7 @@ class LinkedList:
             self.end_node.tf = tf
 
 
-    def calculate_tf_idf(self, total_docs):
+    def cal_tf_idf(self, total_docs):
         curr, curr_len = self.start_node, self.start_node
         if curr is None:
             return
@@ -174,10 +174,12 @@ class LinkedList:
             curr_len = curr_len.next
         # print("len of posting list ",count)
         while curr:
-            tf = curr.tf * count
-            # print("TF --> ",tf)
+            tf = curr.tf / count
+            #print("TF --> ",tf, "self.idf--->", self.idf)
             curr.tf_idf = tf * self.idf
+            # print("tf-idf --->",curr.tf_idf)
             curr = curr.next
+            
         
 
         

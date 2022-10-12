@@ -68,6 +68,6 @@ class Indexer:
         """ Calculate tf-idf score for each document in the postings lists of the index.
             To be implemented."""
         for key, value in self.inverted_index.items():
-            value.calculate_tf_idf(total_docs)
+            value.cal_tf_idf(total_docs)
             
         #raise NotImplementedError
